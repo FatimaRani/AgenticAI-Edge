@@ -1,0 +1,1060 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agentic AI @Edge</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="How hungry is AI? Agentic AI @Edge sees, reasons and acts on edge devices and measures every watt. TU Dresden research by Fatima Rani.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..600&display=swap">
+<style>
+/* Layout: a field station. The page descends from a dithered sky (the problem) to measured ground (the demo and evidence) to the roots (roadmap and the ask). */
+:root{
+  --sky-top:#c4d9d1;      /* hero sky, top */
+  --sky-bottom:#eef2ea;   /* page ground */
+  --cloud:#fbfcf7;        /* dithered clouds */
+  --paper:#f8faf5;        /* raised panels */
+  --ink:#0f2a1e;          /* deep forest text */
+  --ink-2:#465f52;        /* secondary text */
+  --leaf:#1b7444;         /* primary accent */
+  --leaf-soft:#a9cdb5;    /* quiet bars */
+  --sprout:#7fbf3a;       /* meters */
+  --watt:#b86a0c;         /* energy / power */
+  --rtx:#2565a3;          /* second device */
+  --line:rgba(15,42,30,.14);
+  --line-strong:rgba(15,42,30,.28);
+  --console:#0c1d16; --console-2:#13281f; --console-ink:#dcebe1; --console-dim:#88a596; --console-line:rgba(127,191,58,.2);
+  --console-ok:#8fd14f; --console-warn:#f2b441; --console-alert:#f06b5b; --console-box:#8fd14f;
+  --sdg7:#fcc30b; --sdg9:#fd6925; --sdg13:#3f7e44; --on-sdg7:#2a2200; --on-sdg:#ffffff;
+  --scrim:rgba(6,16,12,.86);
+  --figure-bg:#ffffff;    /* the paper figures are drawn on white in both themes */
+
+  --font-display:"Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --font-body:"Instrument Sans", "Helvetica Neue", Arial, system-ui, sans-serif;
+  --font-data:"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --radius:14px;
+  --gutter-l:max(clamp(16px, 4vw, 40px), env(safe-area-inset-left, 0px));
+  --gutter-r:max(clamp(16px, 4vw, 40px), env(safe-area-inset-right, 0px));
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --sky-top:#06120d; --sky-bottom:#0b1813; --cloud:#1d3a30; --paper:#11231b;
+    --ink:#e2eee6; --ink-2:#9db6a8; --leaf:#5fce8c; --leaf-soft:#2f5a43; --sprout:#a2db5f;
+    --watt:#f0ad45; --rtx:#74b6ee; --line:rgba(226,238,230,.12); --line-strong:rgba(226,238,230,.26);
+    --console:#07120d; --console-2:#0e2019; --console-line:rgba(162,219,95,.18);
+    --scrim:rgba(2,8,6,.9);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --sky-top:#06120d; --sky-bottom:#0b1813; --cloud:#1d3a30; --paper:#11231b;
+  --ink:#e2eee6; --ink-2:#9db6a8; --leaf:#5fce8c; --leaf-soft:#2f5a43; --sprout:#a2db5f;
+  --watt:#f0ad45; --rtx:#74b6ee; --line:rgba(226,238,230,.12); --line-strong:rgba(226,238,230,.26);
+  --console:#07120d; --console-2:#0e2019; --console-line:rgba(162,219,95,.18);
+  --scrim:rgba(2,8,6,.9);
+  color-scheme:dark;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--sky-bottom);color:var(--ink);font:400 1.0625rem/1.6 var(--font-body);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--sky-bottom)}
+img,video,svg,canvas{max-width:100%}
+img{display:block}
+a{color:var(--leaf);text-underline-offset:3px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--leaf);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1200px;margin:0 auto;padding-left:var(--gutter-l);padding-right:var(--gutter-r)}
+
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;letter-spacing:-.02em}
+h2{font-size:clamp(2rem,4.6vw,3.4rem);line-height:1.02;font-weight:720}
+h3{font-size:clamp(1.25rem,2vw,1.5rem);line-height:1.15;font-weight:650}
+p{margin:0}
+.eyebrow{font:500 .78rem/1.2 var(--font-data);letter-spacing:.14em;text-transform:uppercase;color:var(--leaf);display:flex;align-items:center;gap:.6em}
+.eyebrow::before{content:"";width:8px;height:8px;background:var(--leaf);box-shadow:8px 0 0 var(--sprout)}
+.lede{font-size:clamp(1.05rem,1.6vw,1.22rem);color:var(--ink-2);max-width:62ch}
+.note{font-size:.84rem;color:var(--ink-2);max-width:70ch}
+.data{font-family:var(--font-data);font-variant-numeric:tabular-nums}
+.section{padding-block:clamp(64px,9vw,120px)}
+.section-head{display:grid;gap:18px;margin-bottom:clamp(28px,4vw,48px)}
+
+/* ---------- header ---------- */
+.site-head{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:color-mix(in srgb,var(--sky-bottom) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.site-head .wrap{display:flex;align-items:center;gap:20px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font:700 1.02rem/1 var(--font-display);white-space:nowrap}
+.brand b{color:var(--leaf);font-weight:800}
+.nav{display:flex;gap:4px;margin-left:auto;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav a{color:var(--ink-2);text-decoration:none;font-size:.9rem;padding:8px 10px;border-radius:8px;white-space:nowrap}
+.nav a:hover{color:var(--ink);background:var(--line)}
+.btn{display:inline-flex;align-items:center;gap:.55em;border:1px solid var(--line-strong);background:transparent;padding:.72em 1.15em;border-radius:999px;font-weight:600;font-size:.95rem;cursor:pointer;text-decoration:none;color:var(--ink);transition:transform .15s ease,background .15s ease}
+.btn:hover{transform:translateY(-1px);background:var(--line)}
+.btn.primary{background:var(--ink);color:var(--sky-bottom);border-color:var(--ink)}
+.btn.primary:hover{background:var(--leaf);border-color:var(--leaf)}
+.btn .tri{width:0;height:0;border-left:8px solid currentColor;border-top:5px solid transparent;border-bottom:5px solid transparent}
+.head-story{flex:none}
+@media (max-width:860px){.nav{display:none}.head-story{margin-left:auto}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;background:linear-gradient(var(--sky-top),var(--sky-bottom))}
+#sky{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;opacity:.95}
+.hero .wrap{position:relative}
+.hero .hero-main{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);gap:clamp(28px,5vw,64px);align-items:center;padding-block:clamp(48px,7vw,96px) clamp(40px,5vw,64px)}
+.hero .hero-stats{padding-bottom:clamp(48px,6vw,80px)}
+.hero-copy{display:grid;gap:22px;min-width:0}
+.badge{justify-self:start;display:inline-flex;gap:.6em;align-items:center;font:500 .8rem/1.3 var(--font-data);padding:.5em .85em;border-radius:999px;background:color-mix(in srgb,var(--paper) 80%,transparent);border:1px solid var(--line)}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--sprout);box-shadow:0 0 0 3px color-mix(in srgb,var(--sprout) 30%,transparent);flex:none}
+.hero h1{font-size:clamp(3.1rem,8.4vw,6.6rem);line-height:.9;font-weight:800;letter-spacing:-.035em}
+.hero h1 .hungry{color:var(--watt);font-style:normal}
+.hero .sub{font:600 clamp(1.25rem,2.4vw,1.7rem)/1.2 var(--font-display);letter-spacing:-.01em}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.byline{font-size:.9rem;color:var(--ink-2)}
+.byline strong{color:var(--ink)}
+
+.console{background:var(--console);color:var(--console-ink);border-radius:var(--radius);box-shadow:0 30px 60px -30px rgba(5,20,12,.55),0 0 0 1px var(--console-line);overflow:hidden;min-width:0}
+.console-bar{display:flex;align-items:center;gap:7px;padding:11px 14px;border-bottom:1px solid var(--console-line);font:500 .76rem/1 var(--font-data);color:var(--console-dim)}
+.console-bar i{width:10px;height:10px;border-radius:50%;background:var(--console-dim);opacity:.45}
+.console-bar span{margin-left:auto}
+.console-log{list-style:none;margin:0;padding:14px 16px;display:grid;gap:5px;font:400 .78rem/1.45 var(--font-data);overflow-x:auto}
+.console-log li{white-space:pre;color:var(--console-dim);transition:color .3s}
+.console-log li.on{color:var(--console-ink)}
+.console-log li .k{color:var(--console-ok)}
+.console-log li .w{color:var(--console-warn)}
+.meter{border-top:1px solid var(--console-line);padding:12px 16px 14px;display:grid;gap:6px}
+.meter-row{display:flex;justify-content:space-between;align-items:baseline;font:500 .74rem/1 var(--font-data);color:var(--console-dim);letter-spacing:.08em;text-transform:uppercase}
+.meter-row b{font:600 1.5rem/1 var(--font-data);color:var(--console-ink);letter-spacing:0;text-transform:none}
+.meter-row b small{font-size:.8rem;color:var(--console-dim);margin-left:3px}
+#heroSpark{width:100%;height:64px;display:block}
+
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line-strong);position:relative}
+.stat{padding:22px 20px 4px 0;display:grid;gap:6px;align-content:start;min-width:0}
+.stat + .stat{padding-left:20px;border-left:1px solid var(--line)}
+.stat b{font:700 clamp(1.9rem,3.4vw,2.6rem)/1 var(--font-display);letter-spacing:-.02em}
+.stat span{font-size:.9rem;color:var(--ink-2)}
+@media (max-width:900px){
+  .hero .hero-main{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat:nth-child(3){padding-left:0;border-left:0}
+  .stat{border-top:1px solid var(--line)}
+}
+
+/* ---------- problem ---------- */
+.problem-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border-block:1px solid var(--line-strong)}
+.pfig{padding:26px 22px 26px 0;display:grid;gap:10px;align-content:start;min-width:0}
+.pfig + .pfig{padding-left:22px;border-left:1px solid var(--line)}
+.pfig .k{font:500 .74rem/1 var(--font-data);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.pfig b{font:700 clamp(1.5rem,2.5vw,2.05rem)/1.05 var(--font-display);letter-spacing:-.02em}
+.pfig p{font-size:.95rem;color:var(--ink-2)}
+.growth{height:8px;background:var(--line);border-radius:4px;overflow:hidden;display:flex}
+.growth i{display:block;height:100%;background:var(--watt)}
+.growth i:first-child{background:var(--ink-2)}
+.policy{margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(20px,4vw,48px);align-items:start}
+.policy ul{margin:0;padding:0;list-style:none;display:grid;gap:14px}
+.policy li{padding-left:22px;position:relative;color:var(--ink-2)}
+.policy li::before{content:"";position:absolute;left:0;top:.6em;width:9px;height:9px;background:var(--leaf)}
+.policy li strong{color:var(--ink)}
+@media (max-width:900px){
+  .problem-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pfig:nth-child(3){padding-left:0;border-left:0}
+  .pfig:nth-child(n+3){border-top:1px solid var(--line)}
+  .policy{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .problem-grid{grid-template-columns:1fr}
+  .pfig + .pfig{padding-left:0;border-left:0;border-top:1px solid var(--line)}
+}
+
+/* ---------- demo ---------- */
+.demo-band{background:linear-gradient(var(--sky-bottom),color-mix(in srgb,var(--sky-top) 40%,var(--sky-bottom)))}
+.stepper{display:grid;grid-template-columns:repeat(5,minmax(0,1fr)) auto;gap:8px;margin-bottom:14px}
+.step{display:grid;gap:4px;text-align:left;padding:12px 14px;border-radius:12px;border:1px solid var(--line-strong);background:var(--paper);cursor:pointer;position:relative;overflow:hidden;min-width:0}
+.step small{font:500 .7rem/1 var(--font-data);color:var(--ink-2);letter-spacing:.1em}
+.step strong{font:650 1.02rem/1.1 var(--font-display)}
+.step .fill{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--leaf)}
+.step[aria-pressed="true"]{background:var(--ink);color:var(--sky-bottom);border-color:var(--ink)}
+.step[aria-pressed="true"] small{color:color-mix(in srgb,var(--sky-bottom) 70%,transparent)}
+.step[aria-pressed="true"] .fill{background:var(--sprout)}
+.play{border-radius:12px;border:1px solid var(--line-strong);background:var(--paper);padding:0 16px;cursor:pointer;font:600 .85rem/1 var(--font-data);display:flex;align-items:center;gap:8px}
+.play .pz{display:inline-flex;gap:3px}
+.play .pz i{width:3px;height:11px;background:currentColor}
+.sim{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);background:var(--console);color:var(--console-ink);border-radius:var(--radius);overflow:hidden;box-shadow:0 0 0 1px var(--console-line),0 40px 80px -50px rgba(5,20,12,.6)}
+.cam{position:relative;aspect-ratio:16/10;min-width:0;background:var(--console-2)}
+.cam canvas{position:absolute;inset:0;width:100%;height:100%}
+.side{border-left:1px solid var(--console-line);padding:22px;display:grid;gap:16px;align-content:start;min-width:0}
+.side .tag{font:500 .72rem/1 var(--font-data);letter-spacing:.14em;color:var(--console-ok);text-transform:uppercase}
+.side h3{color:var(--console-ink)}
+.side p{color:var(--console-dim);font-size:.95rem}
+.kv{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px}
+.kv div{display:grid;gap:3px;min-width:0}
+.kv span{font:500 .7rem/1.2 var(--font-data);letter-spacing:.08em;text-transform:uppercase;color:var(--console-dim)}
+.kv b{font:600 1.15rem/1.1 var(--font-data);color:var(--console-ink)}
+.caption-box{border:1px solid var(--console-line);border-radius:10px;padding:12px 14px;font:400 .9rem/1.5 var(--font-data);color:var(--console-ink);min-height:5.2em}
+.caption-box .pr{display:block;color:var(--console-dim);font-size:.72rem;letter-spacing:.1em;margin-bottom:6px}
+.caret{display:inline-block;width:.55em;height:1em;background:var(--console-ok);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.sra{display:grid;gap:8px}
+.sra div{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:center;font-size:.9rem;padding:9px 12px;border-radius:9px;background:var(--console-2);border:1px solid var(--console-line)}
+.sra span{font:600 .68rem/1 var(--font-data);letter-spacing:.12em;color:var(--console-ok)}
+.sra .act{border-color:var(--console-warn)}
+.sra .act span{color:var(--console-warn)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:500 .8rem/1 var(--font-data);padding:8px 11px;border-radius:999px;border:1px solid var(--console-line);color:var(--console-ink)}
+.chip.hot{border-color:var(--console-alert);color:var(--console-alert)}
+.seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;padding:3px;gap:2px;background:var(--paper);flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:999px;padding:.45em .9em;font-size:.86rem;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--sky-bottom)}
+.sim .seg{background:var(--console-2);border-color:var(--console-line);justify-self:start}
+.sim .seg button{color:var(--console-dim)}
+.sim .seg button[aria-pressed="true"]{background:var(--console-ok);color:var(--console)}
+.cmp{display:grid;gap:10px}
+.cmp-row{display:grid;gap:5px}
+.cmp-row header{display:flex;justify-content:space-between;font:500 .82rem/1 var(--font-data);color:var(--console-dim)}
+.cmp-row header b{color:var(--console-ink)}
+.cmp-bar{height:12px;border-radius:3px;background:var(--console-2);overflow:hidden}
+.cmp-bar i{display:block;height:100%;background:var(--console-ok);transition:width .6s cubic-bezier(.2,.8,.2,1)}
+.cmp-row.big .cmp-bar i{background:var(--console-warn)}
+.score{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;background:var(--console-2);border:1px solid var(--console-line)}
+.score b{font:700 2.4rem/1 var(--font-display);color:var(--console-ink)}
+.score b small{font-size:1rem;color:var(--console-dim);font-weight:500}
+.score em{font:600 .72rem/1 var(--font-data);letter-spacing:.12em;color:var(--console-ok);font-style:normal;border:1px solid var(--console-ok);padding:5px 8px;border-radius:6px}
+.score p{font-size:.82rem}
+@media (max-width:900px){
+  .sim{grid-template-columns:1fr}
+  .side{border-left:0;border-top:1px solid var(--console-line)}
+  .stepper{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .play{grid-column:1/-1;justify-content:center;padding:10px}
+}
+@media (max-width:560px){
+  .stepper{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .step{padding:10px;grid-column:span 2}
+  .step:nth-child(4),.step:nth-child(5){grid-column:span 3}
+}
+.after-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin:clamp(40px,6vw,64px) 0 18px}
+.ba{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.ba-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;min-width:0}
+.ba-card .k{font:500 .72rem/1.2 var(--font-data);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.ba-card .v{display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ba-card .v b{font:650 1.15rem/1.1 var(--font-data);font-variant-numeric:tabular-nums}
+.pill{font:600 .78rem/1 var(--font-data);padding:5px 8px;border-radius:6px;background:color-mix(in srgb,var(--leaf) 16%,transparent);color:var(--leaf)}
+.ba-card svg{width:100%;height:56px;display:block}
+.ba-card .ln{fill:none;stroke:var(--leaf);stroke-width:2}
+.ba-card .ar{fill:color-mix(in srgb,var(--leaf) 14%,transparent)}
+.ba-card .mk{stroke:var(--line-strong);stroke-dasharray:3 3}
+@media (max-width:900px){.ba{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.hw{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line);align-items:baseline}
+.hw strong{font:500 .74rem/1 var(--font-data);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.hw span{font-weight:600}
+.hw span em{font-style:normal;color:var(--ink-2);font-weight:400}
+
+/* ---------- evidence ---------- */
+.panel{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:clamp(18px,3vw,28px);min-width:0}
+.controls{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-bottom:16px}
+.ctl{display:grid;gap:6px}
+.ctl label,.ctl .lab{font:500 .72rem/1 var(--font-data);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2)}
+.range{display:flex;align-items:center;gap:10px}
+.range input{width:min(220px,60vw);accent-color:var(--leaf)}
+.range output{font:600 .9rem/1 var(--font-data);min-width:7ch}
+.chart{width:100%;min-height:200px;overflow-x:auto}
+.chart svg{display:block}
+.chart .bl{font:500 13px var(--font-body);fill:var(--ink)}
+.chart .bs{font:400 11px var(--font-data);fill:var(--ink-2)}
+.chart .bv{font:600 12.5px var(--font-data);fill:var(--ink)}
+.chart .bar{fill:var(--leaf-soft)}
+.chart .bar.best{fill:var(--leaf)}
+.chart .bar.worst{fill:var(--watt)}
+.chart .grid{stroke:var(--line)}
+.chart .axis{stroke:var(--line-strong)}
+.chart .tick{font:400 11px var(--font-data);fill:var(--ink-2)}
+.chart .axt{font:500 11.5px var(--font-data);fill:var(--ink-2)}
+.chart .jet{fill:color-mix(in srgb,var(--watt) 26%,transparent);stroke:var(--watt);stroke-width:2}
+.chart .rtx{fill:color-mix(in srgb,var(--rtx) 26%,transparent);stroke:var(--rtx);stroke-width:2}
+.chart .lj{font:600 12.5px var(--font-data);fill:var(--watt)}
+.chart .lr{font:600 12.5px var(--font-data);fill:var(--rtx)}
+.callout{margin-top:14px;padding:14px 16px;border-radius:10px;background:color-mix(in srgb,var(--leaf) 9%,transparent);font-size:.98rem}
+.callout b{color:var(--leaf)}
+.ev-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(16px,2.4vw,24px);margin-top:clamp(16px,2.4vw,24px)}
+.ev-grid .panel{display:grid;gap:12px;align-content:start}
+.calc-out{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:4px}
+.calc-out div{border:1px solid var(--line);border-radius:10px;padding:12px 14px;display:grid;gap:4px}
+.calc-out span{font:500 .7rem/1.2 var(--font-data);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.calc-out b{font:700 1.6rem/1.05 var(--font-display)}
+.calc-out .save b{color:var(--leaf)}
+@media (max-width:900px){.ev-grid{grid-template-columns:1fr}}
+
+/* ---------- research ---------- */
+.papers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;position:relative}
+.paper{display:grid;gap:12px;align-content:start;padding:20px;border-radius:var(--radius);border:1px solid var(--line);background:var(--paper);min-width:0}
+.paper .venue{font:500 .72rem/1.35 var(--font-data);letter-spacing:.08em;text-transform:uppercase;color:var(--leaf)}
+.paper h3{font-size:1.18rem}
+.paper p{font-size:.92rem;color:var(--ink-2)}
+.paper .res{font-size:.92rem;color:var(--ink);border-top:1px solid var(--line);padding-top:10px}
+.paper .fig-link{justify-self:start;font-size:.85rem;padding:.5em .9em}
+.paper.new{border-color:var(--leaf);box-shadow:0 0 0 1px var(--leaf)}
+.paper.new .venue::after{content:"Accepted";margin-left:8px;padding:2px 6px;border-radius:4px;background:var(--leaf);color:var(--paper);letter-spacing:.06em}
+@media (max-width:1000px){.papers{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.papers{grid-template-columns:1fr}}
+.talk{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(20px,4vw,44px);align-items:center;margin-top:clamp(36px,5vw,56px)}
+.talk video{width:100%;border-radius:var(--radius);background:var(--console);aspect-ratio:16/9;display:block}
+.talk-copy{display:grid;gap:12px}
+@media (max-width:900px){.talk{grid-template-columns:1fr}}
+
+/* ---------- impact ---------- */
+.impact{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(28px,5vw,64px)}
+.uses{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-top:1px solid var(--line-strong)}
+.uses li{list-style:none;padding:14px 10px 14px 0;border-bottom:1px solid var(--line);font-weight:600;display:flex;gap:10px;align-items:center;min-width:0}
+.uses li::before{content:"";width:6px;height:6px;flex:none;background:var(--sprout);box-shadow:0 0 0 2px color-mix(in srgb,var(--sprout) 30%,transparent)}
+.uses{margin:0;padding:0}
+.sdgs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.sdg{aspect-ratio:1;border-radius:10px;padding:12px;display:grid;align-content:space-between;color:var(--on-sdg);min-width:0}
+.sdg b{font:800 2.2rem/1 var(--font-display)}
+.sdg span{font:600 .78rem/1.2 var(--font-body);text-transform:uppercase;letter-spacing:.02em}
+.sdg.s7{background:var(--sdg7);color:var(--on-sdg7)}
+.sdg.s9{background:var(--sdg9)}
+.sdg.s13{background:var(--sdg13)}
+.weights{display:flex;height:34px;border-radius:8px;overflow:hidden;margin-top:6px}
+.weights i{display:flex;align-items:center;justify-content:center;font:600 .76rem/1 var(--font-data);color:var(--on-sdg);font-style:normal;min-width:0;white-space:nowrap;overflow:hidden}
+.weights .w13{background:var(--sdg13)} .weights .w7{background:var(--sdg7);color:var(--on-sdg7)} .weights .w9{background:var(--sdg9)} .weights .wl{background:var(--ink-2);color:var(--sky-bottom)}
+.tiers{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font:500 .78rem/1 var(--font-data)}
+.tiers span{padding:6px 9px;border-radius:6px;border:1px solid var(--line-strong)}
+@media (max-width:900px){.impact{grid-template-columns:1fr}}
+@media (max-width:520px){.uses{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* ---------- roadmap ---------- */
+.gantt{display:grid;grid-template-columns:200px repeat(9,minmax(0,1fr));gap:6px 4px;align-items:center}
+.gantt .mh{font:500 .72rem/1 var(--font-data);color:var(--ink-2);text-align:center;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.gantt .ph{font-weight:600;font-size:.92rem;padding-right:10px;line-height:1.25}
+.gantt .ph small{display:block;font:500 .7rem/1.3 var(--font-data);color:var(--ink-2);letter-spacing:.06em}
+.gantt .bar{height:38px;border-radius:8px;background:var(--leaf);color:var(--paper);display:flex;align-items:center;padding:0 12px;font-size:.82rem;font-weight:600;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.gantt .bar.b2{background:color-mix(in srgb,var(--leaf) 80%,var(--ink))}
+.gantt .bar.b5{background:var(--watt)}
+.gantt-wrap{overflow-x:auto}
+.gantt-wrap .gantt{min-width:760px}
+.next{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-top:clamp(36px,5vw,56px)}
+.next article{padding:18px;border-radius:12px;border:1px dashed var(--line-strong);display:grid;gap:10px;align-content:start;min-width:0}
+.next article small{font:500 .7rem/1 var(--font-data);letter-spacing:.12em;color:var(--watt);text-transform:uppercase}
+.next article h3{font-size:1.08rem}
+.next article p{font-size:.88rem;color:var(--ink-2)}
+.next article q{font-size:.9rem;font-weight:600;quotes:none;border-top:1px solid var(--line);padding-top:10px}
+.done{margin-top:16px;font-size:.9rem;color:var(--ink-2)}
+.done b{color:var(--leaf);font-family:var(--font-data);font-size:.78rem;letter-spacing:.1em;margin-right:6px}
+@media (max-width:1000px){.next{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.next{grid-template-columns:1fr}}
+
+/* ---------- footer ---------- */
+.site-foot{background:var(--console);color:var(--console-dim);font-size:.85rem;border-top:1px solid var(--console-line)}
+.site-foot .wrap{display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;align-items:center;padding-block:22px calc(22px + env(safe-area-inset-bottom,0px))}
+.site-foot .foot-contact{gap:18px 24px;padding-block:clamp(28px,4vw,40px);border-bottom:1px solid var(--console-line)}
+.foot-who{display:grid;gap:8px}
+.foot-label{font:500 .74rem/1 var(--font-data);letter-spacing:.14em;text-transform:uppercase;color:var(--console-ok)}
+.foot-name{font:700 clamp(1.3rem,2.4vw,1.7rem)/1.1 var(--font-display);color:var(--console-ink)}
+.foot-links{display:flex;flex-wrap:wrap;gap:10px;min-width:0}
+.foot-link{display:inline-flex;align-items:center;gap:.6em;min-width:0;max-width:100%;padding:.72em 1.15em;border:1px solid var(--console-line);border-radius:999px;color:var(--console-ink);font-weight:600;font-size:.95rem;text-decoration:none;overflow-wrap:anywhere;transition:border-color .2s,background .2s}
+.foot-link:hover{border-color:var(--console-ok);background:var(--console-2)}
+.foot-link:focus-visible{outline:2px solid var(--console-ok);outline-offset:3px}
+.foot-link svg{flex:none;color:var(--console-ok)}
+.site-foot .foot-ack{gap:14px 24px;padding-block:24px;border-bottom:1px solid var(--console-line)}
+/* partner logos sit on white tiles: two of them have dark lettering made for light backgrounds */
+.ack-logos{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:12px}
+.ack-logos li{background:#fff;border-radius:12px;height:76px;padding:10px 18px;display:flex;align-items:center}
+.ack-logos img{display:block;width:auto}
+.lg-gain{height:40px} .lg-ceti{height:48px} .lg-secai{height:56px}
+@media (max-width:560px){.ack-logos li{height:64px;padding:8px 14px}.lg-gain{height:32px}.lg-ceti{height:40px}.lg-secai{height:48px}}
+.vh{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+
+/* ---------- lightbox ---------- */
+.overlay{position:fixed;inset:0;z-index:100;background:var(--scrim);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) calc(14px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));color:var(--console-ink)}
+.ov-bar{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.ov-bar .count{font:500 .8rem/1 var(--font-data);color:var(--console-dim)}
+.icon-btn{width:42px;height:42px;border-radius:50%;border:1px solid var(--console-line);background:var(--console);color:var(--console-ink);cursor:pointer;display:grid;place-items:center;font:500 1.15rem/1 var(--font-data);flex:none}
+.icon-btn:hover{border-color:var(--console-ok)}
+.lb-stage{min-height:0;overflow:auto;display:flex;align-items:center;justify-content:center;padding:12px 0}
+.lb-stage img{max-height:100%;max-width:100%;min-width:0;min-height:0;object-fit:contain;background:var(--figure-bg);border-radius:8px;cursor:zoom-in}
+.lb-stage.zoom{display:block}
+.lb-stage.zoom img{max-height:none;max-width:none;width:2400px;cursor:zoom-out}
+.lb-cap{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;max-width:1100px;width:100%;margin:0 auto}
+.lb-cap div{display:grid;gap:4px;min-width:0}
+.lb-cap b{font:650 1.05rem/1.2 var(--font-display)}
+.lb-cap small{font:500 .74rem/1.2 var(--font-data);letter-spacing:.06em;color:var(--console-ok);text-transform:uppercase}
+.lb-cap p{font-size:.9rem;color:var(--console-dim)}
+
+@media (prefers-reduced-motion: reduce){
+  .cmp-bar i{transition:none}
+  .caret{animation:none}
+}
+</style>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap">
+    <a class="brand" href="#top" aria-label="Agentic AI at the Edge, back to top">
+      <svg width="22" height="22" viewBox="0 0 11 11" aria-hidden="true" shape-rendering="crispEdges">
+        <g fill="var(--leaf)"><rect x="5" y="1" width="4" height="1"/><rect x="3" y="2" width="7" height="1"/><rect x="2" y="3" width="8" height="1"/><rect x="2" y="4" width="7" height="1"/><rect x="2" y="5" width="6" height="1"/><rect x="3" y="6" width="4" height="1"/></g>
+        <g fill="var(--sprout)"><rect x="4" y="4" width="1" height="1"/><rect x="3" y="5" width="1" height="1"/><rect x="2" y="7" width="1" height="1"/><rect x="1" y="8" width="1" height="2"/></g>
+      </svg>
+      <span>Agentic AI <b>@Edge</b></span>
+    </a>
+    <nav class="nav" aria-label="Sections">
+      <a href="#problem">Problem</a>
+      <a href="#demo">Live demo</a>
+      <a href="#evidence">Evidence</a>
+      <a href="#research">Research</a>
+      <a href="#impact">Impact</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="game/index.html">Game</a>
+    </nav>
+    <a class="btn head-story" href="story/index.html"><span class="tri" aria-hidden="true"></span>1-minute story</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- ================= HERO ================= -->
+<section class="hero" aria-labelledby="h-hero">
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="wrap hero-main">
+    <div class="hero-copy">
+      <span class="badge"><i></i>Accepted · IEEE CCNC 2027, Las Vegas</span>
+      <h1 id="h-hero">How <em class="hungry">hungry</em><br>is AI?</h1>
+      <p class="sub">Can it think smart and eat less energy?</p>
+      <p class="lede">Agentic AI @Edge is a physical AI demonstrator from TU Dresden. It sees a scene through a camera, reasons about it, and acts, all on small edge devices. Our GAMING and SAGE frameworks measure every watt, millisecond and gram of CO₂, and an agent switches to a leaner setup whenever it can.</p>
+      <div class="actions">
+        <a class="btn primary" href="story/index.html"><span class="tri" aria-hidden="true"></span>Watch the 1-minute story</a>
+        <a class="btn" href="#demo">Try the live demo</a>
+        <a class="btn" href="game/index.html">Play The Haunted Lab</a>
+      </div>
+      <p class="byline"><strong>Fatima Rani</strong> · TUD Dresden University of Technology · Gen AI evangelist and sustainable AI advocate</p>
+    </div>
+
+    <figure class="console" aria-label="Replay of a demo run log with a live power meter" style="margin:0">
+      <div class="console-bar"><i></i><i></i><i></i><span>agentic-ai@edge ~ /demo · replay</span></div>
+      <ol class="console-log" id="log">
+        <li>$ edge-agent run --camera cam02 --device rtx4060</li>
+        <li><span class="k">[see]     </span> camera stream ....... 50 fps</li>
+        <li><span class="k">[detect]  </span> yolov8-nano ......... person 0.99</li>
+        <li><span class="k">[reason]  </span> vlm ................. worker in forklift path</li>
+        <li><span class="w">[act]     </span> agent ............... alert driver · pause robot</li>
+        <li><span class="k">[measure] </span> 0.098 mWh/frame ..... green score 84/100</li>
+        <li><span class="k">[optimize]</span> switch large → nano . power −40 %</li>
+      </ol>
+      <div class="meter">
+        <div class="meter-row"><span>GPU power</span><b><span id="heroW">50</span><small>W</small></b></div>
+        <svg id="heroSpark" viewBox="0 0 400 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+    </figure>
+  </div>
+
+  <div class="wrap hero-stats">
+    <div class="stats" id="stats">
+      <div class="stat"><b>5.1×</b><span>energy gap between the leanest and hungriest model we measured, same question, same device</span></div>
+      <div class="stat"><b>2.5×</b><span>more energy per camera frame for a large vision model than for the nano version</span></div>
+      <div class="stat"><b id="statEdge">−26%</b><span>energy per answer on the faster GPU, even at 7.5× the power draw</span></div>
+      <div class="stat"><b>4</b><span>peer-reviewed papers in 2026, from edge benchmarks to clinical AI</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= PROBLEM ================= -->
+<section class="section" id="problem" aria-labelledby="h-problem">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The problem</span>
+      <h2 id="h-problem">AI is scaling fast. Its energy bill is scaling with it.</h2>
+      <p class="lede">Large language models need a lot of computing power. Most tools that run them in production track speed and cost, but not energy or carbon. Operators see latency. Nobody sees the watts.</p>
+    </div>
+    <div class="problem-grid">
+      <div class="pfig">
+        <span class="k">Energy · EU</span>
+        <b class="data">70 → 115 TWh</b>
+        <div class="growth" aria-hidden="true"><i style="width:61%"></i><i style="width:39%"></i></div>
+        <p>EU data-centre electricity use, 2024 to 2030 (+64%)</p>
+      </div>
+      <div class="pfig">
+        <span class="k">AI servers · global</span>
+        <b class="data">30% a year</b>
+        <p>Growth of electricity used by AI servers, against 9% for conventional servers</p>
+      </div>
+      <div class="pfig">
+        <span class="k">Carbon · USA</span>
+        <b class="data">24–44 Mt</b>
+        <p>Additional CO₂-equivalent per year from AI servers in the USA, 2024 to 2030</p>
+      </div>
+      <div class="pfig">
+        <span class="k">Water · Europe</span>
+        <b class="data">273–820 M m³</b>
+        <p>Projected yearly water use of digital services in Europe by 2030</p>
+      </div>
+    </div>
+    <p class="note" style="margin-top:12px">Figures as compiled in the SAGE project deck (2026).</p>
+
+    <div class="policy">
+      <h3>Europe is starting to ask for the numbers. Few tools can deliver them for AI at the edge.</h3>
+      <ul>
+        <li><strong>Data centres must report.</strong> The recast EU Energy Efficiency Directive (2023) requires larger data centres to publish energy performance data.</li>
+        <li><strong>AI providers must document.</strong> The EU AI Act asks providers of general-purpose AI models to document their models' energy consumption.</li>
+        <li><strong>The gap is at the edge.</strong> More AI now runs on cameras, boards and laptops outside data centres. We measure energy, CO₂ and speed there, per answer and per frame.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DEMO ================= -->
+<section class="section demo-band" id="demo" aria-labelledby="h-demo">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The live demo · Agentic AI @Edge</span>
+      <h2 id="h-demo">See. Reason. Act. Then spend fewer watts doing it.</h2>
+      <p class="lede">A camera watches a warehouse aisle. Small AI models on an edge device detect what is happening, describe it in plain language and decide what to do. Step through the pipeline or let it run.</p>
+    </div>
+
+    <div class="stepper" role="group" aria-label="Pipeline stages" id="stepper"></div>
+    <div class="sim">
+      <div class="cam"><canvas id="cam" aria-label="Simulated camera view of a warehouse aisle with a forklift and a worker"></canvas></div>
+      <div class="side" id="side" aria-live="polite"></div>
+    </div>
+
+    <div class="after-head">
+      <div style="display:grid;gap:8px">
+        <h3>Before and after the agent stepped in</h3>
+        <p class="note">Last 60 seconds of a demo run on the RTX 4060. Values are read from the demo dashboard and rounded.</p>
+      </div>
+    </div>
+    <div class="ba" id="ba"></div>
+
+    <div class="hw">
+      <strong>Runs on</strong>
+      <span>GPU <em>RTX 4060</em></span>
+      <span>Edge SoC <em>NVIDIA Jetson</em></span>
+      <span>Apple <em>Mac / iPhone</em></span>
+      <span>Axelera AI <em>AIPU</em></span>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVIDENCE ================= -->
+<section class="section" id="evidence" aria-labelledby="h-evidence">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Measured, not estimated</span>
+      <h2 id="h-evidence">The same answer can cost five times the energy.</h2>
+      <p class="lede">In the GAMING study we ran 17 benchmark runs on two devices: an NVIDIA Jetson Orin Nano, a board the size of a paperback, and an RTX 4060 laptop GPU. Each run answered 30 questions and logged power, time and tokens.</p>
+    </div>
+
+    <div class="panel">
+      <div class="controls">
+        <div class="ctl"><span class="lab" id="lab-dev">Device</span><div class="seg" id="exDev" role="group" aria-labelledby="lab-dev"></div></div>
+        <div class="ctl"><span class="lab" id="lab-met">Measure</span><div class="seg" id="exMet" role="group" aria-labelledby="lab-met"></div></div>
+        <div class="ctl"><label for="grid">Grid carbon intensity</label>
+          <div class="range"><input type="range" id="grid" min="0" max="800" step="10" value="400"><output id="gridOut" for="grid">400 g/kWh</output></div>
+        </div>
+      </div>
+      <div class="chart" id="exChart"></div>
+      <div class="callout" id="exCall"></div>
+      <p class="note" style="margin-top:10px">Kaggle “Environmental Sensor Telemetry Data” prompts. Jetson: llama.cpp, GGUF Q4_K_M. RTX: vLLM, AWQ INT4; RTX power is the graphics card only, Jetson power is the whole board. The paper uses 400 g CO₂/kWh; move the slider to see CO₂ on a cleaner or dirtier grid. * Run log has no AWQ suffix, treat with caution.</p>
+    </div>
+
+    <div class="ev-grid">
+      <div class="panel">
+        <h3>Edge is not automatically greener</h3>
+        <p class="note">Energy is power multiplied by time. The small board sips power but answers slowly. The GPU draws more power but finishes sooner. Each box's area is the energy for one answer (SAGE study, 20 runs).</p>
+        <div class="controls" style="margin:4px 0 0">
+          <div class="seg" id="arModel" role="group" aria-label="Model"></div>
+          <div class="seg" id="arStrat" role="group" aria-label="Prompt strategy"></div>
+        </div>
+        <div class="chart" id="arChart"></div>
+        <div class="callout" id="arCall"></div>
+      </div>
+
+      <div class="panel">
+        <h3>What it means at public-service scale</h3>
+        <p class="note">An illustration, not a measurement: we multiply the measured energy per answer by a daily volume of questions. It uses the device and grid settings from the chart above.</p>
+        <div class="ctl" style="margin-top:6px"><label for="vol">Questions answered per day</label>
+          <div class="range"><input type="range" id="vol" min="0" max="100" step="1" value="75"><output id="volOut" for="vol">1,000,000</output></div>
+        </div>
+        <div class="calc-out">
+          <div><span id="cLeanName">Leanest model</span><b id="cLean">–</b></div>
+          <div><span id="cHungryName">Hungriest model</span><b id="cHungry">–</b></div>
+          <div class="save"><span>Electricity saved per year</span><b id="cSave">–</b></div>
+          <div class="save"><span>CO₂ avoided per year</span><b id="cCo2">–</b></div>
+        </div>
+        <div class="callout" id="calcCall"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RESEARCH ================= -->
+<section class="section demo-band" id="research" aria-labelledby="h-research">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">2026 research output</span>
+      <h2 id="h-research">Four peer-reviewed papers, one chain of evidence.</h2>
+      <p class="lede">Each paper answers one question, on the same hardware, with the same measurement method. Together they show where AI's energy goes and how an agent can take it back.</p>
+    </div>
+    <div class="papers">
+      <article class="paper">
+        <span class="venue">IEEE WCCCT 2026 · Qingdao</span>
+        <h3>GAMING: A Green Computing Framework for Deploying LLM at the Edge</h3>
+        <p>How do quantized LLMs compare on speed, energy and CO₂ on edge hardware?</p>
+        <p class="res">17 runs, 9 models. Model choice alone changes energy per answer by up to 5.1×.</p>
+        <button class="btn fig-link" type="button" data-fig="gaming">View framework figure</button>
+      </article>
+      <article class="paper">
+        <span class="venue">IEEE BDAI 2026 · Chongqing</span>
+        <h3>Small footprint, big intelligence! SAGE: Agentic governance for energy-aware, high-performance LLMOps</h3>
+        <p>Does a closed-loop, two-agent design pick sustainable configurations?</p>
+        <p class="res">20 runs. The faster GPU used about a quarter less energy per request despite 7.5× the power.</p>
+        <button class="btn fig-link" type="button" data-fig="greenagent">View SAGE figure</button>
+      </article>
+      <article class="paper">
+        <span class="venue">GLOBECOM 2026 · Workshop WS-24</span>
+        <h3>CARE: Carbon-Aware Reasoning at the Edge for Sustainable Connected Healthcare</h3>
+        <p>Are compact edge LLMs fast and reliable enough for glucose-monitoring alerts?</p>
+        <p class="res">Real data from 25 people with type 1 diabetes. Fastest setup answered in 3.3 s; a sensor reading arrives every 5 minutes.</p>
+      </article>
+      <article class="paper new">
+        <span class="venue">IEEE CCNC 2027 · Las Vegas · 9–12 Jan</span>
+        <h3>Think Green, Act Lean! An Agentic Sandbox for Autonomous Optimization of Edge LLMOps</h3>
+        <p>Can an agent change a live AI deployment safely, without a human in the loop?</p>
+        <p class="res">Every proposed change passes an evaluation gate first. If it fails, nothing in the infrastructure changes.</p>
+        <button class="btn fig-link" type="button" data-fig="ksandbox">View sandbox figure</button>
+      </article>
+    </div>
+
+    <div class="talk">
+      <video controls preload="none" playsinline poster="assets/video/gaming-talk-poster.webp" aria-label="GAMING talk recording">
+        <source src="assets/video/gaming-talk.mp4" type="video/mp4">
+      </video>
+      <div class="talk-copy">
+        <span class="eyebrow">Presentation</span>
+        <h3>GAMING at Convene 360 Madison, New York</h3>
+        <p class="note">The opening of the GAMING talk, presented by Fatima Rani: a green computing framework for deploying LLMs at the edge.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= IMPACT ================= -->
+<section class="section" id="impact" aria-labelledby="h-impact">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Where it matters</span>
+      <h2 id="h-impact">Built for the places AI is going next.</h2>
+      <p class="lede">Edge AI runs where data is created: on farms, in hospitals, on factory floors and in city infrastructure. Each of these settings has tight limits on power, cost and response time.</p>
+    </div>
+    <div class="impact">
+      <div style="display:grid;gap:14px;align-content:start">
+        <h3>Edge LLMOps use cases</h3>
+        <ul class="uses">
+          <li>Smart agriculture</li><li>Healthcare</li><li>Smart city</li>
+          <li>Manufacturing</li><li>Predictive maintenance</li><li>Robotics</li>
+          <li>Autonomous vehicles</li><li>Digital twins</li><li>Wearable devices</li>
+          <li>Smart retail</li><li>Smart devices</li><li>Customer support</li>
+        </ul>
+      </div>
+      <div style="display:grid;gap:14px;align-content:start">
+        <h3>Scored against the UN Sustainable Development Goals</h3>
+        <div class="sdgs">
+          <div class="sdg s7"><b>7</b><span>Affordable and clean energy</span></div>
+          <div class="sdg s9"><b>9</b><span>Industry, innovation and infrastructure</span></div>
+          <div class="sdg s13"><b>13</b><span>Climate action</span></div>
+        </div>
+        <p class="note">Our Green Score (0–100) weights the three goals directly, plus 15% for response time:</p>
+        <div class="weights" role="img" aria-label="Green Score weights: SDG 13 climate 35 percent, SDG 7 energy 30 percent, SDG 9 innovation 20 percent, latency 15 percent">
+          <i class="w13" style="width:35%">SDG 13 · 35%</i><i class="w7" style="width:30%">SDG 7 · 30%</i><i class="w9" style="width:20%">SDG 9 · 20%</i><i class="wl" style="width:15%">15%</i>
+        </div>
+        <div class="tiers"><span>GREEN ≥ 75</span><span>REVIEW ≥ 55</span><span>ACTION REQUIRED &lt; 55</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROADMAP ================= -->
+<section class="section demo-band" id="roadmap" aria-labelledby="h-roadmap">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Roadmap</span>
+      <h2 id="h-roadmap">Nine months to an open-source framework.</h2>
+      <p class="lede">The measurement agent is built and tested in three papers. Funding lets us make the optimization agent live, test it on more hardware and release the whole system openly.</p>
+    </div>
+    <div class="gantt-wrap">
+      <div class="gantt" role="table" aria-label="Nine-month plan">
+        <div></div>
+        <div class="mh">M1</div><div class="mh">M2</div><div class="mh">M3</div><div class="mh">M4</div><div class="mh">M5</div><div class="mh">M6</div><div class="mh">M7</div><div class="mh">M8</div><div class="mh">M9</div>
+        <div class="ph">Foundation and architecture<small>Phase 1</small></div><div class="bar" style="grid-column:2/4">Review, SDG mapping, design</div><div style="grid-column:4/11"></div>
+        <div class="ph">Dual agent development<small>Phase 2</small></div><div style="grid-column:2/4"></div><div class="bar b2" style="grid-column:4/7">Optimizer + Green AI Benchmarker</div><div style="grid-column:7/11"></div>
+        <div class="ph">Integration and testing<small>Phase 3</small></div><div style="grid-column:2/7"></div><div class="bar" style="grid-column:7/9">Orchestration, baselines</div><div style="grid-column:9/11"></div>
+        <div class="ph">Evaluation and SDG impact<small>Phase 4</small></div><div style="grid-column:2/9"></div><div class="bar b2" style="grid-column:9/10">Scoring</div><div></div>
+        <div class="ph">Dissemination and open source<small>Phase 5</small></div><div style="grid-column:2/10"></div><div class="bar b5" style="grid-column:10/11">Release</div>
+      </div>
+    </div>
+
+    <div class="next">
+      <article><small>Planned</small><h3>Live grid carbon</h3><p>Replace the fixed 400 g/kWh with a live grid feed, so the agent favours the greenest setup as the grid changes through the day.</p><q>How much do results improve as the grid gets cleaner?</q></article>
+      <article><small>Planned</small><h3>Live optimization agent</h3><p>Run the agent live on Green Monitor outputs, with a second reasoning pass on unclear cases before it recommends a change.</p><q>Can it decide safely, without a human in the loop?</q></article>
+      <article><small>Planned</small><h3>More hardware</h3><p>Raspberry Pi 5 with an AI accelerator, an RTX 5090 and Apple Silicon: ARM and NPU boards, high-end GPUs, unified memory.</p><q>Can any device be both fast and battery-friendly?</q></article>
+      <article><small>Planned</small><h3>Mid-scale models</h3><p>Go beyond 8B parameters to 15–30B on the RTX 5090 and Apple Silicon.</p><q>Does hardware still beat model choice, and where does memory become the limit?</q></article>
+      <article><small>Planned</small><h3>Water footprint</h3><p>Add a water estimate to the Green Score, based on measured power and published data-centre efficiency benchmarks.</p><q>Can one score cover energy, carbon and water?</q></article>
+    </div>
+    <p class="done"><b>DONE</b>GAMING: 17 runs on 2 devices · SAGE: 20 runs, closed-loop design · CARE: 20 runs on real glucose data, Green Score, reliability tests</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-contact" id="contact">
+    <div class="foot-who"><span class="foot-label">Contact</span><span class="foot-name">Fatima Rani</span></div>
+    <div class="foot-links">
+      <a class="foot-link" href="https://www.linkedin.com/in/fatimarani-se/" target="_blank" rel="noopener noreferrer">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="4" fill="currentColor"/><path d="M7.5 10.5v6M7.5 7.5v.01M11.5 16.5v-6M11.5 13.5a2.5 2.5 0 0 1 5 0v3" fill="none" stroke="var(--console)" stroke-width="2.2" stroke-linecap="round"/></svg>
+        <span><span class="vh">LinkedIn: </span>linkedin.com/in/fatimarani-se</span>
+      </a>
+      <a class="foot-link" href="mailto:fatima.rani@tu-dresden.de">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3.5 7.5 12 13l8.5-5.5"/></svg>
+        <span><span class="vh">Email: </span>fatima.rani@tu-dresden.de</span>
+      </a>
+    </div>
+  </div>
+  <div class="wrap foot-ack">
+    <span class="foot-label">Acknowledgements</span>
+    <ul class="ack-logos">
+      <li><img src="assets/logos/gain.webp" alt="gAIn" width="188" height="75" class="lg-gain" loading="lazy" decoding="async"></li>
+      <li><img src="assets/logos/ceti.webp" alt="CeTI" width="620" height="290" class="lg-ceti" loading="lazy" decoding="async"></li>
+      <li><img src="assets/logos/secai.webp" alt="SECAI" width="359" height="400" class="lg-secai" loading="lazy" decoding="async"></li>
+    </ul>
+  </div>
+  <div class="wrap foot-base"><span>Agentic AI @Edge · See. Reason. Act. Think green.</span><span>TUD Dresden University of Technology · 2026</span></div>
+</footer>
+
+<!-- ================= LIGHTBOX ================= -->
+<div class="overlay" id="lb" hidden role="dialog" aria-modal="true" aria-label="Figure viewer">
+  <div class="ov-bar"><span class="count data" id="lbCount"></span><button class="icon-btn" type="button" id="lbClose" aria-label="Close">✕</button></div>
+  <div class="lb-stage" id="lbStage"><img id="lbImg" alt=""></div>
+  <div class="lb-cap">
+    <button class="icon-btn" type="button" id="lbPrev" aria-label="Previous figure">←</button>
+    <div><small id="lbPaper"></small><b id="lbTitle"></b><p id="lbText"></p></div>
+    <button class="icon-btn" type="button" id="lbNext" aria-label="Next figure">→</button>
+  </div>
+</div>
+
+
+<script>
+(()=>{
+'use strict';
+const $=(s,r=document)=>r.querySelector(s), $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const NS='http://www.w3.org/2000/svg';
+const S=(tag,attrs={},text)=>{const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;return e};
+const tok=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const fmtInt=n=>Math.round(n).toLocaleString('en-US');
+function seg(el,opts,cur,cb){
+  el.replaceChildren();
+  opts.forEach(o=>{const b=document.createElement('button');b.type='button';b.textContent=o.label;b.setAttribute('aria-pressed',String(o.id===cur));
+    b.addEventListener('click',()=>{$$('button',el).forEach(x=>x.setAttribute('aria-pressed','false'));b.setAttribute('aria-pressed','true');cb(o.id)});el.append(b)});
+}
+// colour tokens for canvas, refreshed on theme change
+let C={};
+function readTokens(){['--sky-top','--sky-bottom','--cloud','--console','--console-2','--console-ink','--console-dim','--console-ok','--console-warn','--console-alert','--console-line','--leaf','--watt'].forEach(k=>C[k]=tok(k))}
+readTokens();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{readTokens();themeHooks.forEach(f=>f())});
+new MutationObserver(()=>{readTokens();themeHooks.forEach(f=>f())}).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+const themeHooks=[];
+function hexToRgb(h){h=h.replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');const n=parseInt(h,16);return[(n>>16)&255,(n>>8)&255,n&255]}
+
+/* ================= DATA (from the SAGE / GAMING / CARE run logs) ================= */
+const GRAW=[
+['Jetson','Qwen2.5 1.5B',1.5,3431.839,3401.717,3706.978,0.291389,18.648894,10.447,0.000298789],
+['Jetson','Qwen2.5 3B',3,6861.308,6813.54,7234.764,0.145745,9.327668,10.825,0.000618959],
+['Jetson','Qwen3 4B',4,12391.727,12283.755,13010.082,0.080699,5.164736,8.379,0.000865305],
+['Jetson','Gemma3 4B',4,9137.532,8685.39,8944.6,0.109439,7.00408,10.6,0.000807173],
+['Jetson','DeepSeek-R1 1.5B',1.5,5279.264,5209.03,5454.737,0.18942,12.122903,7.805,0.00034337],
+['Jetson','Ministral 3B',3,9484.477,9407.412,9809.972,0.105435,6.747868,8.87,0.000701072],
+['Jetson','Llama3.2 3B',3,8606.658,8577.115,8871.083,0.116189,7.436103,8.572,0.000614815],
+['Jetson','Llama3.1 8B Q4',8,16280.392,15647.072,16307.163,0.061424,3.931109,10.527,0.001428183],
+['Jetson','Llama3.1 8B Q3',8,18531.203,16777.101,17258.239,0.053963,3.453634,9.93,0.00153355],
+['RTX','Qwen2.5 1.5B',1.5,898.174,906.339,912.636,1.11337,71.255669,79.372,0.000594104],
+['RTX','Qwen2.5 3B',3,654.566,694.584,714.097,1.527729,89.88138,73.512,0.000401011],
+['RTX','Qwen3 4B',4,1385.257,1294.584,1822.894,0.721888,46.200814,60.842,0.000702367],
+['RTX','Gemma3 4B',4,1040.588,1077.791,1097.223,0.960995,61.50367,74.131,0.000642859],
+['RTX','DeepSeek-R1 1.5B',1.5,948.62,992.273,1097.357,1.054163,67.466408,46.677,0.000369],
+['RTX','Ministral 3B',3,1330.357,1346.251,1403.24,0.751678,48.107405,57.814,0.000640955],
+['RTX','Llama3.2 3B',3,1012.465,1004.323,1140.263,0.987688,63.212046,64.074,0.00054063],
+['RTX','Llama3.1 8B Q4',8,1380.425,1389.737,1403.526,0.724414,46.362517,84.128,0.000967794]];
+const G=GRAW.map(([dev,model,params,avg,p50,p95,thr,tps,watt,kwh])=>({dev,model,params,p50,tps,watt,kwh,j:kwh*3.6e6/30,flag:dev==='RTX'&&model==='Qwen2.5 1.5B'}));
+const DEVN={Jetson:'Jetson Orin Nano',RTX:'RTX 4060 laptop GPU'};
+const STR=['Zero-shot','Few-shot','Chain of thought','Role-based','RAG-style'];
+const SC=[
+ {dev:'Jetson',model:'Qwen3-4B',lat:[6942.912,7345.589,7106.791,7095.294,7100.92],w:[8.193,8.322,8.34,8.185,8.367],kwh:[1.5801836e-05,1.698108e-05,1.6465988e-05,1.6134231e-05,1.6506198e-05]},
+ {dev:'Jetson',model:'Gemma-3-4B',lat:[6736.387,7287.316,6990.702,6948.61,6925.513],w:[8.12,8.117,7.926,8.059,8.133],kwh:[1.5194502e-05,1.6432701e-05,1.5392533e-05,1.555545e-05,1.5647703e-05]},
+ {dev:'RTX',model:'Qwen3-4B',lat:[822.711,814.793,818.844,738.812,775.342],w:[52.962,56.413,50.984,58.7,56.486],kwh:[1.2105135e-05,1.2770109e-05,1.1598633e-05,1.2048623e-05,1.2167539e-05]},
+ {dev:'RTX',model:'Gemma-3-4B',lat:[580.932,596.757,567.104,593.366,684.326],w:[69.608,80.468,65.38,72.96,52.967],kwh:[1.1237807e-05,1.3344404e-05,1.0303394e-05,1.203093e-05,1.0072171e-05]}];
+
+// headline: mean energy per request, RTX vs Jetson, across the 20 SAGE runs
+(()=>{const m=d=>SC.filter(c=>c.dev===d).flatMap(c=>c.kwh).reduce((a,b)=>a+b,0)/10;const pct=Math.round((1-m('RTX')/m('Jetson'))*100);$('#statEdge').textContent='−'+pct+'%'})();
+
+/* ================= HERO SKY (ordered-dither clouds) ================= */
+(()=>{
+  const cv=$('#sky'),ctx=cv.getContext('2d'),P=4;let w=0,h=0,img,t=0,last=0,visible=true;
+  const B=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v=>(v+.5)/16);
+  const hash=(x,y)=>{let n=x*374761393+y*668265263;n=(n^(n>>>13))*1274126177;return((n^(n>>>16))>>>0)/4294967295};
+  const sm=t=>t*t*(3-2*t);
+  const vn=(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,a=hash(xi,yi),b=hash(xi+1,yi),c=hash(xi,yi+1),d=hash(xi+1,yi+1),u=sm(xf),v=sm(yf);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v};
+  const fbm=(x,y)=>{let s=0,a=.5,f=1;for(let i=0;i<4;i++){s+=a*vn(x*f,y*f);f*=2.03;a*=.5}return s};
+  function size(){const r=cv.getBoundingClientRect();w=Math.max(1,Math.ceil(r.width/P));h=Math.max(1,Math.ceil(r.height/P));cv.width=w;cv.height=h;img=ctx.createImageData(w,h);draw()}
+  function draw(){
+    if(!img)return;
+    const top=hexToRgb(C['--sky-top']||'#c4d9d1'),bot=hexToRgb(C['--sky-bottom']||'#eef2ea'),cl=hexToRgb(C['--cloud']||'#ffffff');const d=img.data;
+    for(let y=0;y<h;y++){const gy=y/h,mask=sm(Math.min(1,Math.max(0,(gy-.32)/.6)));
+      for(let x=0;x<w;x++){const th=B[(y&3)*4+(x&3)];
+        const n=fbm(x*.022+t,y*.05+3.1);const dens=Math.min(1,Math.max(0,(n-.42)/.28))*mask;
+        const sky=gy>th?bot:top;const col=dens>th?cl:sky;const i=(y*w+x)*4;d[i]=col[0];d[i+1]=col[1];d[i+2]=col[2];d[i+3]=255}}
+    ctx.putImageData(img,0,0)}
+  function loop(ts){if(visible&&ts-last>110){t+=.0035;draw();last=ts}requestAnimationFrame(loop)}
+  new ResizeObserver(size).observe(cv);themeHooks.push(draw);
+  new IntersectionObserver(e=>{visible=e[0].isIntersecting}).observe(cv);
+  if(!reduce)requestAnimationFrame(loop);
+})();
+
+/* ================= HERO CONSOLE + POWER METER ================= */
+function powerSeries(n,dropAt,before,after,noise,seed){const out=[];let s=seed;const r=()=>{s=(s*16807)%2147483647;return s/2147483647-.5};
+  for(let i=0;i<n;i++){const k=Math.min(1,Math.max(0,(i-dropAt)/4));const base=before+(after-before)*sm2(k);out.push(base+r()*noise*(1-k*.4))}return out}
+function sm2(t){return t*t*(3-2*t)}
+(()=>{
+  const svg=$('#heroSpark'),wEl=$('#heroW'),lines=$$('#log li');const N=120;const data=powerSeries(N,62,50,30,3.2,42);
+  let i=0;
+  function render(k){svg.replaceChildren();const x=j=>j/(N-1)*400,y=v=>62-(v-20)/40*58;
+    const pts=data.slice(0,k+1).map((v,j)=>`${x(j).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    svg.append(S('polyline',{points:`0,64 ${pts} ${x(k)},64`,fill:C['--console-ok'],opacity:.12}));
+    svg.append(S('polyline',{points:pts,fill:'none',stroke:C['--console-ok'],'stroke-width':2,'vector-effect':'non-scaling-stroke'}));
+    wEl.textContent=Math.round(data[k]);
+    const on=Math.min(lines.length,Math.floor(k/(N/lines.length))+1);lines.forEach((l,j)=>l.classList.toggle('on',j<on))}
+  if(reduce){render(N-1);return}
+  render(N-1);
+  setInterval(()=>{i=(i+1)%(N+25);render(Math.min(i,N-1))},90);
+  themeHooks.push(()=>render(Math.min(i,N-1)));
+})();
+
+/* ================= DEMO SIMULATOR ================= */
+const STAGES=[
+ {k:'See',t:'Camera capture'},{k:'Detect',t:'Object detection'},{k:'Reason',t:'Vision-language model'},{k:'Act',t:'Agentic AI'},{k:'Optimize',t:'GAMING & SAGE'}];
+const DEMO={stage:0,auto:!reduce,model:'nano',t0:performance.now(),frame:0};
+const MODELS={nano:{label:'YOLOv8 Nano',e:0.114,co2:37.6,fps:57},large:{label:'YOLOv8 Large',e:0.288,co2:95.1,fps:43}};
+const stepper=$('#stepper');
+STAGES.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='step';b.setAttribute('aria-pressed','false');
+  b.innerHTML=`<small>${String(i+1).padStart(2,'0')}</small><strong>${s.k}</strong><i class="fill"></i>`;
+  b.addEventListener('click',()=>{setAuto(false);setStage(i)});stepper.append(b)});
+const playBtn=document.createElement('button');playBtn.type='button';playBtn.className='play';stepper.append(playBtn);
+playBtn.addEventListener('click',()=>{setAuto(!DEMO.auto);if(DEMO.auto)DEMO.t0=performance.now()});
+function setAuto(v){DEMO.auto=v;playBtn.innerHTML=v?'<span class="pz"><i></i><i></i></span>Pause':'<span class="tri"></span>Auto-play';playBtn.setAttribute('aria-label',v?'Pause auto-play':'Start auto-play')}
+setAuto(DEMO.auto);
+let typer=null;
+function typeInto(el,text){clearInterval(typer);if(reduce){el.textContent=text;return}let k=0;el.textContent='';typer=setInterval(()=>{k+=2;el.textContent=text.slice(0,k);if(k>=text.length)clearInterval(typer)},28)}
+function setStage(i){
+  DEMO.stage=i;DEMO.t0=performance.now();
+  $$('.step',stepper).forEach((b,j)=>{b.setAttribute('aria-pressed',String(j===i));$('.fill',b).style.width=j<i?'100%':'0'});
+  const side=$('#side');const s=STAGES[i];
+  const head=`<span class="tag">${String(i+1).padStart(2,'0')} · ${s.k}</span><h3>${s.t}</h3>`;
+  if(i===0){side.innerHTML=head+`<p>A standard camera streams the scene. Every frame is timestamped, so the energy spent on it can be counted later.</p>
+    <div class="kv"><div><span>Stream</span><b>Live · CAM 02</b></div><div><span>Frames</span><b id="fc">0</b></div><div><span>Resolution</span><b>640 px</b></div><div><span>Frame rate</span><b>50 fps</b></div></div>`}
+  if(i===1){side.innerHTML=head+`<p>A small vision model (YOLOv8) finds people and vehicles in every frame.</p>
+    <div class="kv"><div><span>Person</span><b>0.99</b></div><div><span>Forklift</span><b>0.94</b></div><div><span>Latency P50</span><b>14.9 ms</b></div><div><span>Latency P95</span><b>21.6 ms</b></div></div>`}
+  if(i===2){side.innerHTML=head+`<p>A vision-language model turns the frame into a sentence a person can check.</p>
+    <div class="caption-box"><span class="pr">PROMPT › DESCRIBE THIS SCENE</span><span id="cap"></span><span class="caret"></span></div>`;
+    typeInto($('#cap'),'Warehouse aisle. A forklift is carrying a pallet toward the walkway; one worker stands in its path.')}
+  if(i===3){side.innerHTML=head+`<p>The agent decides what to do, inside limits we set.</p>
+    <div class="sra"><div><span>SEE</span>Forklift moving · worker in walkway</div><div><span>REASON</span>Worker is inside the forklift path</div><div class="act"><span>ACT</span>Alert driver · pause robot · log event</div></div>
+    <div class="chips"><span class="chip hot">Alert driver</span><span class="chip hot">Pause robot</span><span class="chip">Log event</span></div>`}
+  if(i===4){side.innerHTML=head+`<p>Every watt, millisecond and gram of CO₂ is measured. Pick a detector size to compare.</p>
+    <div class="seg" id="mdl" role="group" aria-label="Detector size"></div>
+    <div class="cmp" id="cmp"></div>
+    <div class="score"><b>84<small>/100</small></b><div style="display:grid;gap:6px"><em>GREEN</em><p>Live Green Score, Nano on the RTX 4060, Germany grid</p></div></div>`;
+    seg($('#mdl'),[{id:'nano',label:'Nano'},{id:'large',label:'Large'}],DEMO.model,v=>{DEMO.model=v;renderCmp()});renderCmp()}
+}
+function renderCmp(){const box=$('#cmp');if(!box)return;const m=MODELS[DEMO.model],max=MODELS.large.e;
+  box.innerHTML=['nano','large'].map(k=>{const d=MODELS[k];return`<div class="cmp-row${k==='large'?' big':''}"><header><span>${d.label}${k===DEMO.model?' ◂':''}</span><b>${d.e.toFixed(3)} mWh/frame</b></header><div class="cmp-bar"><i style="width:${(d.e/max*100).toFixed(1)}%"></i></div></div>`}).join('')+
+  `<div class="kv"><div><span>CO₂ / 1,000 frames</span><b>${m.co2} mg</b></div><div><span>Throughput</span><b>${m.fps} fps</b></div></div><p style="font-size:.85rem">Large uses <b style="color:var(--console-warn)">2.5×</b> more energy per frame than Nano for the same camera view.</p>`}
+setStage(0);
+
+// canvas scene
+(()=>{
+  const cv=$('#cam'),ctx=cv.getContext('2d');let W=0,H=0,visible=true;
+  function size(){const r=cv.getBoundingClientRect(),dpr=Math.min(2,devicePixelRatio||1);W=r.width;H=r.height;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+  new ResizeObserver(size).observe(cv);size();
+  new IntersectionObserver(e=>{visible=e[0].isIntersecting}).observe(cv);
+  const rr=(x,y,w,h,r)=>{ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,r):ctx.rect(x,y,w,h)};
+  function shelf(x,w,flip){const y0=H*.18,y1=H*.78;ctx.fillStyle=C['--console'];ctx.fillRect(x,y0,w,y1-y0);
+    ctx.strokeStyle=C['--console-line'];ctx.lineWidth=2;for(let k=0;k<4;k++){const y=y0+(y1-y0)*k/3;ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+w,y);ctx.stroke()}
+    ctx.fillStyle=C['--console-dim'];ctx.globalAlpha=.35;for(let k=0;k<3;k++){for(let b=0;b<3;b++){const bw=w*.22,bh=(y1-y0)/3*.55;ctx.fillRect(x+w*.08+b*w*.3,y0+(y1-y0)*(k+1)/3-bh-2,bw,bh)}}ctx.globalAlpha=1}
+  function worker(cx,base,s){ctx.fillStyle=C['--console-dim'];
+    rr(cx-s*.12,base-s*.62,s*.24,s*.4,s*.05);ctx.fill(); // torso
+    ctx.fillRect(cx-s*.1,base-s*.24,s*.08,s*.24);ctx.fillRect(cx+s*.02,base-s*.24,s*.08,s*.24); // legs
+    ctx.fillStyle=C['--console-warn'];ctx.fillRect(cx-s*.12,base-s*.5,s*.24,s*.04);ctx.fillRect(cx-s*.12,base-s*.42,s*.24,s*.04); // vest stripes
+    ctx.fillStyle=C['--console-ink'];ctx.beginPath();ctx.arc(cx,base-s*.72,s*.085,0,7);ctx.fill();
+    ctx.fillStyle=C['--console-warn'];ctx.beginPath();ctx.arc(cx,base-s*.76,s*.095,Math.PI,0);ctx.fill()}
+  function forklift(x,base,s){const c=C['--console-dim'];ctx.fillStyle=c;
+    rr(x,base-s*.42,s*.62,s*.3,s*.04);ctx.fill(); // body
+    ctx.strokeStyle=c;ctx.lineWidth=Math.max(2,s*.025);ctx.strokeRect(x+s*.08,base-s*.78,s*.36,s*.38); // cab
+    ctx.fillRect(x-s*.06,base-s*.86,s*.05,s*.78); // mast
+    ctx.fillRect(x-s*.34,base-s*.16,s*.3,s*.04); // fork
+    ctx.fillStyle=C['--console-ink'];ctx.globalAlpha=.55;ctx.fillRect(x-s*.32,base-s*.4,s*.26,s*.24);ctx.globalAlpha=1; // pallet load
+    ctx.fillStyle=C['--console'];[x+s*.12,x+s*.5].forEach(wx=>{ctx.beginPath();ctx.arc(wx,base-s*.1,s*.09,0,7);ctx.fill();ctx.strokeStyle=c;ctx.stroke()})}
+  function box(x,y,w,h,label,col){ctx.strokeStyle=col;ctx.lineWidth=2;ctx.strokeRect(x,y,w,h);
+    ctx.font=`600 ${Math.max(10,H*.034)}px ${tok('--font-data')||'monospace'}`;const tw=ctx.measureText(label).width+10,th=Math.max(16,H*.055);
+    ctx.fillStyle=col;ctx.fillRect(x-1,y-th,tw,th);ctx.fillStyle=C['--console'];ctx.fillText(label,x+4,y-th*.28)}
+  function frame(ts){requestAnimationFrame(frame);if(!visible||!W)return;
+    const el=(ts-DEMO.t0)/1000;
+    if(DEMO.auto&&el>5.2){setStage((DEMO.stage+1)%STAGES.length);return}
+    const fill=$$('.step .fill')[DEMO.stage];if(fill)fill.style.width=DEMO.auto?Math.min(100,el/5.2*100)+'%':'100%';
+    DEMO.frame+=1;const fc=$('#fc');if(fc&&DEMO.frame%2===0)fc.textContent=fmtInt(DEMO.frame*0.83);
+    ctx.clearRect(0,0,W,H);
+    // floor with perspective
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,C['--console']);g.addColorStop(1,C['--console-2']);ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.strokeStyle=C['--console-line'];ctx.lineWidth=1;const vx=W*.5,vy=H*.3;
+    for(let k=-6;k<=6;k++){ctx.beginPath();ctx.moveTo(vx,vy);ctx.lineTo(vx+k*W*.18,H);ctx.stroke()}
+    for(let k=1;k<7;k++){const y=vy+(H-vy)*Math.pow(k/6,1.8);ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke()}
+    shelf(W*.02,W*.17);shelf(W*.81,W*.17);
+    // walkway marking
+    ctx.fillStyle=C['--console-warn'];ctx.globalAlpha=.25;ctx.fillRect(W*.2,H*.86,W*.6,H*.02);ctx.globalAlpha=1;
+    const s=H*.62,base=H*.9;
+    const cyc=(ts/1000)%14,phase=cyc<7?cyc/7:2-cyc/7;const fx=W*(.72-.16*sm2(phase));
+    const wx=W*.36;
+    worker(wx,base,s*.78);forklift(fx,base,s*.62);
+    const st=DEMO.stage;const ok=C['--console-box']||C['--console-ok'];
+    if(st>=1){const ww=s*.78*.34,wh=s*.78*.92;box(wx-ww/2,base-wh,ww,wh,'person 0.99',st>=3?C['--console-alert']:ok);
+      box(fx-s*.62*.38,base-s*.62*.92,s*.62*1.05,s*.62*.92,'forklift 0.94',ok)}
+    if(st>=3){ctx.setLineDash([6,6]);ctx.strokeStyle=C['--console-alert'];ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(fx-s*.62*.4,base-s*.05);ctx.lineTo(wx+s*.1,base-s*.05);ctx.stroke();ctx.setLineDash([]);
+      if(Math.floor(ts/400)%2){ctx.font=`700 ${Math.max(11,H*.04)}px ${tok('--font-data')||'monospace'}`;ctx.fillStyle=C['--console-alert'];ctx.fillText('⚠ WORKER IN PATH',W*.04,H*.12)}}
+    if(st===2){ctx.fillStyle=C['--console'];ctx.globalAlpha=.78;ctx.fillRect(0,H*.0,W,H*.14);ctx.globalAlpha=1;ctx.font=`500 ${Math.max(10,H*.035)}px ${tok('--font-data')||'monospace'}`;ctx.fillStyle=C['--console-ok'];ctx.fillText('VLM › forklift approaching worker in walkway',W*.04,H*.085)}
+    if(st===4){const m=MODELS[DEMO.model];ctx.fillStyle=C['--console'];ctx.globalAlpha=.8;ctx.fillRect(W*.6,H*.04,W*.37,H*.17);ctx.globalAlpha=1;
+      ctx.font=`600 ${Math.max(10,H*.036)}px ${tok('--font-data')||'monospace'}`;ctx.fillStyle=DEMO.model==='nano'?C['--console-ok']:C['--console-warn'];
+      ctx.fillText(`${m.label}`,W*.62,H*.1);ctx.fillStyle=C['--console-ink'];ctx.fillText(`${m.e.toFixed(3)} mWh/frame`,W*.62,H*.17)}
+    // HUD
+    ctx.font=`500 ${Math.max(10,H*.034)}px ${tok('--font-data')||'monospace'}`;ctx.fillStyle=C['--console-ink'];
+    if(st!==2&&st<3){ctx.fillText('CAM 02 · L105',W*.06,H*.08);if(Math.floor(ts/600)%2){ctx.fillStyle=C['--console-alert'];ctx.beginPath();ctx.arc(W*.04,H*.07,H*.012,0,7);ctx.fill()}}
+    ctx.fillStyle=C['--console-dim'];ctx.fillText('REC · 640 px',W*.04,H*.96)}
+  requestAnimationFrame(frame);
+})();
+
+// before / after cards
+(()=>{const box=$('#ba');const M=[
+  {k:'GPU power',b:50,a:30,u:'W',lo:20,hi:60,d:0},
+  {k:'Throughput',b:45,a:59,u:'fps',lo:30,hi:70,d:0},
+  {k:'Latency, median',b:17.5,a:12.3,u:'ms',lo:0,hi:20,d:1},
+  {k:'Energy per frame',b:0.30,a:0.14,u:'mWh',lo:0,hi:.35,d:2}];
+  M.forEach((m,mi)=>{const data=powerSeries(60,32,m.b,m.a,(m.hi-m.lo)*.04,7+mi*13);const pct=Math.round((m.a/m.b-1)*100);
+    const c=document.createElement('div');c.className='ba-card';
+    c.innerHTML=`<span class="k">${m.k}</span><div class="v"><b>≈${m.b.toFixed(m.d)} → ${m.a.toFixed(m.d)} ${m.u}</b><span class="pill">${pct>0?'+':'−'}${Math.abs(pct)}%</span></div>`;
+    const svg=S('svg',{viewBox:'0 0 200 56',preserveAspectRatio:'none','aria-hidden':'true'});const x=i=>i/59*200,y=v=>54-(v-m.lo)/(m.hi-m.lo)*50;
+    const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    svg.append(S('polygon',{points:`0,56 ${pts} 200,56`,class:'ar'}),S('line',{x1:x(32),x2:x(32),y1:0,y2:56,class:'mk','vector-effect':'non-scaling-stroke'}),S('polyline',{points:pts,class:'ln','vector-effect':'non-scaling-stroke'}));
+    c.append(svg);box.append(c)})})();
+
+/* ================= ENERGY EXPLORER ================= */
+const EX={dev:'Jetson',met:'energy',grid:400};
+const MET={
+  energy:{label:'Energy per answer',f:d=>d.j,low:true,fmt:v=>v.toFixed(0)+' J'},
+  co2:{label:'CO₂ per 1,000 answers',f:d=>d.kwh/30*1000*EX.grid,low:true,fmt:v=>v.toFixed(1)+' g'},
+  speed:{label:'Speed',f:d=>d.tps,low:false,fmt:v=>v.toFixed(1)+' tok/s'},
+  time:{label:'Median time',f:d=>d.p50/1000,low:true,fmt:v=>v.toFixed(1)+' s'}};
+seg($('#exDev'),[{id:'Jetson',label:'Jetson Orin Nano'},{id:'RTX',label:'RTX 4060'}],EX.dev,v=>{EX.dev=v;renderEx();renderCalc()});
+seg($('#exMet'),Object.keys(MET).map(k=>({id:k,label:MET[k].label})),EX.met,v=>{EX.met=v;renderEx()});
+$('#grid').addEventListener('input',e=>{EX.grid=+e.target.value;$('#gridOut').textContent=EX.grid+' g/kWh';renderEx();renderCalc()});
+function renderEx(){
+  const box=$('#exChart'),m=MET[EX.met];const W=Math.max(320,box.clientWidth||640);
+  const rows=G.filter(d=>d.dev===EX.dev).sort((a,b)=>m.low?m.f(a)-m.f(b):m.f(b)-m.f(a));
+  const narrow=W<520,L=narrow?124:170,R=narrow?72:96,rh=narrow?36:38,T=4,H=T+rows.length*rh+30;
+  const raw=Math.max(...rows.map(m.f))||1;const p=Math.pow(10,Math.floor(Math.log10(raw/4))),step=[1,2,2.5,5,10].map(k=>k*p).find(s=>raw/s<=5);
+  const max=Math.ceil(raw/step)*step;const x=v=>(W-L-R)*v/max;
+  const svg=S('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,role:'img','aria-label':`${m.label} for ${rows.length} models on the ${DEVN[EX.dev]}`});
+  const unit=m.fmt(1).split(' ')[1];
+  for(let v=0;v<=max+1e-9;v+=step){const xx=L+x(v);svg.append(S('line',{x1:xx,x2:xx,y1:T,y2:T+rows.length*rh,class:'grid'}),S('text',{x:xx,y:H-12,'text-anchor':'middle',class:'tick'},`${+v.toFixed(2)} ${unit}`))}
+  const clean=rows.filter(d=>!d.flag);const best=clean[0],worst=clean[clean.length-1];
+  rows.forEach((d,i)=>{const y=T+i*rh,v=m.f(d);const cls=d===best?'best':d===worst?'worst':'';
+    svg.append(S('text',{x:L-12,y:y+rh/2-1,'text-anchor':'end',class:'bl'},d.model+(d.flag?' *':'')),
+      S('text',{x:L-12,y:y+rh/2+13,'text-anchor':'end',class:'bs'},d.watt.toFixed(0)+' W avg'),
+      S('rect',{x:L,y:y+8,width:Math.max(2,x(v)),height:rh-16,rx:3,class:'bar '+cls}),
+      S('text',{x:L+x(v)+8,y:y+rh/2+4,class:'bv'},m.fmt(v)))});
+  box.replaceChildren(svg);
+  const ratio=m.low?m.f(worst)/m.f(best):m.f(best)/m.f(worst);
+  const call={energy:`On the <b>${DEVN[EX.dev]}</b>, ${worst.model} needs <b>${ratio.toFixed(1)}×</b> the energy of ${best.model} for one answer.`,
+    co2:`At <b>${EX.grid} g/kWh</b>, 1,000 answers from ${best.model} emit <b>${m.f(best).toFixed(1)} g</b> of CO₂; ${worst.model} emits <b>${m.f(worst).toFixed(1)} g</b>. Same hardware, ${ratio.toFixed(1)}× the footprint.`,
+    speed:`${best.model} writes <b>${m.f(best).toFixed(1)} tokens per second</b> on the ${DEVN[EX.dev]}, <b>${ratio.toFixed(1)}×</b> faster than ${worst.model}.`,
+    time:`Median wait for an answer ranges from <b>${m.f(best).toFixed(1)} s</b> (${best.model}) to <b>${m.f(worst).toFixed(1)} s</b> (${worst.model}).`}[EX.met];
+  $('#exCall').innerHTML=call;
+}
+
+/* ================= POWER × TIME ================= */
+const AR={model:'Qwen3-4B',i:0};
+seg($('#arModel'),[{id:'Qwen3-4B',label:'Qwen3-4B'},{id:'Gemma-3-4B',label:'Gemma-3-4B'}],AR.model,v=>{AR.model=v;renderArea()});
+seg($('#arStrat'),['Zero-shot','Few-shot','CoT','Role','RAG'].map((s,i)=>({id:i,label:s})),AR.i,v=>{AR.i=v;renderArea()});
+function renderArea(){
+  const box=$('#arChart');const W=Math.max(300,box.clientWidth||520),H=Math.round(Math.min(320,Math.max(240,W*.62)));
+  const j=SC.find(c=>c.dev==='Jetson'&&c.model===AR.model),r=SC.find(c=>c.dev==='RTX'&&c.model===AR.model),i=AR.i;
+  const jl=j.lat[i]/1000,jw=j.w[i],rl=r.lat[i]/1000,rw=r.w[i],jE=j.kwh[i]*3.6e6,rE=r.kwh[i]*3.6e6;
+  const mg={l:46,r:14,t:14,b:40},xm=Math.ceil(Math.max(jl,rl)),ym=Math.ceil(Math.max(jw,rw)/20)*20+10;
+  const X=v=>mg.l+(W-mg.l-mg.r)*v/xm,Y=v=>H-mg.b-(H-mg.t-mg.b)*v/ym;
+  const svg=S('svg',{viewBox:`0 0 ${W} ${H}`,width:W,height:H,role:'img','aria-label':`Power versus time for ${AR.model}, ${STR[i]} prompt. Jetson ${jw.toFixed(1)} watts for ${jl.toFixed(2)} seconds, RTX ${rw.toFixed(1)} watts for ${rl.toFixed(2)} seconds.`});
+  for(let v=0;v<=ym;v+=20)svg.append(S('line',{x1:mg.l,x2:W-mg.r,y1:Y(v),y2:Y(v),class:'grid'}),S('text',{x:mg.l-8,y:Y(v)+4,'text-anchor':'end',class:'tick'},v));
+  for(let v=0;v<=xm;v++)svg.append(S('text',{x:X(v),y:H-mg.b+16,'text-anchor':'middle',class:'tick'},v));
+  svg.append(S('text',{x:mg.l+(W-mg.l-mg.r)/2,y:H-6,'text-anchor':'middle',class:'axt'},'Time to answer (s)'),
+    S('text',{transform:`translate(12 ${mg.t+(H-mg.t-mg.b)/2}) rotate(-90)`,'text-anchor':'middle',class:'axt'},'Power (W)'),
+    S('line',{x1:mg.l,x2:W-mg.r,y1:Y(0),y2:Y(0),class:'axis'}));
+  svg.append(S('rect',{x:X(0),y:Y(jw),width:X(jl)-X(0),height:Y(0)-Y(jw),class:'jet'}),S('rect',{x:X(0),y:Y(rw),width:X(rl)-X(0),height:Y(0)-Y(rw),class:'rtx'}));
+  const jx=Math.min(X(jl)-6,W-mg.r-6);
+  svg.append(S('text',{x:jx,y:Y(jw)-24,'text-anchor':'end',class:'lj'},`Jetson · ${jE.toFixed(0)} J`),S('text',{x:jx,y:Y(jw)-8,'text-anchor':'end',class:'tick'},`${jw.toFixed(1)} W × ${jl.toFixed(2)} s`),
+    S('text',{x:X(rl)+10,y:Y(rw)+18,class:'lr'},`RTX · ${rE.toFixed(0)} J`),S('text',{x:X(rl)+10,y:Y(rw)+34,class:'tick'},`${rw.toFixed(1)} W × ${rl.toFixed(2)} s`));
+  box.replaceChildren(svg);
+  const pct=Math.round((1-rE/jE)*100);
+  $('#arCall').innerHTML=`The RTX draws <b>${(rw/jw).toFixed(1)}×</b> the power but answers <b>${(jl/rl).toFixed(1)}×</b> faster, so it uses <b>${Math.abs(pct)}% ${pct>=0?'less':'more'}</b> energy per answer.`;
+}
+
+/* ================= SCALE CALCULATOR ================= */
+const volFromSlider=v=>Math.round(Math.pow(10,3+4*v/100)/1000)*1000;
+let VOL=volFromSlider(75);
+$('#vol').addEventListener('input',e=>{VOL=volFromSlider(+e.target.value);renderCalc()});
+const fmtE=kwh=>kwh>=1e6?(kwh/1e6).toFixed(1)+' GWh':kwh>=1000?(kwh/1000).toFixed(kwh>=1e4?0:1)+' MWh':Math.round(kwh)+' kWh';
+const fmtC=g=>g>=1e6?(g/1e6).toFixed(g>=1e7?0:1)+' t':Math.round(g/1000)+' kg';
+function renderCalc(){
+  $('#volOut').textContent=fmtInt(VOL);
+  const rows=G.filter(d=>d.dev===EX.dev&&!d.flag).sort((a,b)=>a.j-b.j),lean=rows[0],hungry=rows[rows.length-1];
+  const yr=d=>d.j*VOL*365/3.6e6;const save=yr(hungry)-yr(lean);
+  $('#cLeanName').textContent=lean.model+' · per year';$('#cHungryName').textContent=hungry.model+' · per year';
+  $('#cLean').textContent=fmtE(yr(lean));$('#cHungry').textContent=fmtE(yr(hungry));
+  $('#cSave').textContent=fmtE(save);$('#cCo2').textContent=fmtC(save*EX.grid);
+  $('#calcCall').innerHTML=`Answering <b>${fmtInt(VOL)}</b> questions a day on a ${DEVN[EX.dev]}, choosing ${lean.model} over ${hungry.model} saves <b>${fmtE(save)}</b> of electricity a year at ${EX.grid} g/kWh. Our agent makes that choice automatically, when answer quality allows.`;
+}
+
+/* ================= FIGURES + LIGHTBOX ================= */
+const FIGS=[
+ {id:'gaming',src:'assets/fig/gaming.webp',t:'GAMING framework',paper:'GAMING · IEEE WCCCT 2026',tag:'Architecture',c:'Device, cloud and edge layers: an automated IoT data pipeline, an LLM CI/CD pipeline, and green LLM inference at the network edge.'},
+ {id:'greenagent',src:'assets/fig/greenagent.webp',t:'SAGE building blocks',paper:'SAGE · IEEE BDAI 2026',tag:'Agents',c:'From IIoT data and ingestion through the data, LLM and deployment pipelines to a ReAct agent, the Green Monitor agent and the edge-cloud layer.'},
+ {id:'ksandbox',src:'assets/fig/ksandbox.webp',t:'Agentic sandbox',paper:'Think Green, Act Lean! · IEEE CCNC 2027',tag:'Agents',c:'The Optimise Agent proposes a change, an evaluation gate (ROUGE-L, BLEU, TF-IDF, stability, latency) checks it, and only passing actions reach Kubernetes. A failed check falls back with no infrastructure change.'}];
+$$('[data-fig]').forEach(b=>b.addEventListener('click',()=>{const i=FIGS.findIndex(f=>f.id===b.dataset.fig);openLb(FIGS,i,b)}));
+
+const LB={list:[],i:0,ret:null};const lb=$('#lb');
+function openLb(list,i,ret){LB.list=list;LB.i=i;LB.ret=ret;showLb();lb.hidden=false;document.body.style.overflow='hidden';$('#lbClose').focus()}
+function showLb(){const f=LB.list[LB.i];$('#lbStage').classList.remove('zoom');const im=$('#lbImg');im.src=f.src;im.alt=f.t;$('#lbTitle').textContent=f.t;$('#lbText').textContent=f.c;$('#lbPaper').textContent=f.paper||'';$('#lbCount').textContent=`${LB.i+1} / ${LB.list.length}`}
+function closeLb(){lb.hidden=true;document.body.style.overflow='';LB.ret&&LB.ret.focus()}
+$('#lbClose').addEventListener('click',closeLb);
+$('#lbPrev').addEventListener('click',()=>{LB.i=(LB.i-1+LB.list.length)%LB.list.length;showLb()});
+$('#lbNext').addEventListener('click',()=>{LB.i=(LB.i+1)%LB.list.length;showLb()});
+$('#lbImg').addEventListener('click',()=>$('#lbStage').classList.toggle('zoom'));
+lb.addEventListener('click',e=>{if(e.target===lb)closeLb()});
+
+document.addEventListener('keydown',e=>{
+  if(!lb.hidden){if(e.key==='Escape')closeLb();else if(e.key==='ArrowRight')$('#lbNext').click();else if(e.key==='ArrowLeft')$('#lbPrev').click()}
+});
+
+
+/* ================= RESPONSIVE RE-RENDER ================= */
+renderEx();renderArea();renderCalc();
+let rz;new ResizeObserver(()=>{clearTimeout(rz);rz=setTimeout(()=>{renderEx();renderArea()},80)}).observe($('#evidence'));
+})();
+</script>
+</body>
+</html>
